@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2018-06-18 05:52:42">
+<sp_widget action="INSERT_OR_UPDATE">
+<category>custom</category>
+<client_script><![CDATA[function($scope) {
+	/* widget controller */
+	var c = this;
+ 
+	c.add = function() {
+		c.data.action = "addMessage";
+		c.data.key_s = $scope.my_key_s;
+		c.server.update().then(function(){
+			c.data.action = undefined;
+		//	c.data.message = "";
+		})
+	}
+ 
+	c.remove = function(i) {
+		c.data.i = i;
+		c.data.action = "removeMessage";
+		c.server.update().then(function(){
+			c.data.action = undefined;
+		})
+	}
+	
+	
+	c.abc=function()
+	{
+		alert($scope.txt);
+	}
+ 
+}]]></client_script>
+<controller_as>c</controller_as>
+<css>/*[contenteditable=true]:empty::before {
+  content: attr(td);
+}*/</css>
+<data_table>sp_instance</data_table>
+<demo_data/>
+<description/>
+<docs display_value=""/>
+<field_list/>
+<has_preview>true</has_preview>
+<id>get-fc-number</id>
+<internal>false</internal>
+<link/>
+<name>Get FC Number Detail</name>
+<option_schema/>
+<public>false</public>
+<roles/>
+<script><![CDATA[(function() {
+
+	data.messages = [];
+
+	if (input) {
+
+		data.messages = input.messages;		
+
+		if (input.action == "addMessage") {
+
+			//Check the record in the table that present or not
+			for(var i=0;i<data.messages.length;i++){
+				// gs.addInfoMessage(data.messages[i].name);
+				//gs.addInfoMessage(input.key_s);
+				//var n = data.messages[i].name.toString().equals(input.key_s);
+				//gs.addInfoMessage(n);
+				if(data.messages[i].number.toString().equals(input.key_s.toString())==true){
+					//return if status=Success the NA;
+					//return if status=Error the FC # Not Found;
+					//return if status=Success then Duplicate
+
+					gs.addInfoMessage('Duplicate Name');
+					return false;
+				}
+				else
+				{
+					
+
+					//	data.messages.push(input.message);
+				}
+
+			}
+			
+			var gr=new GlideRecord('u_fc_input');
+					gr.addQuery('u_fc_number',input.key_s);
+					gr.query();
+					if(!gr.hasNext())
+					{
+						gs.addInfoMessage("Record Not Found");
+					}
+					while(gr.next())
+					{
+						var task={};
+						task.number=gr.getDisplayValue('u_fc_number');
+						task.item_number=gr.getDisplayValue('u_fc_line_item_number');
+						task.open_amount=gr.getDisplayValue('u_open_amount');
+						task.fc_currency=gr.getDisplayValue('u_fc_currency');
+						task.gl_amount=gr.getDisplayValue('u_gl_account');
+						task.invoice_amount_by_item=gr.getDisplayValue('u_invoice_amount_by_line_item');
+						task.invoice_currency=gr.getDisplayValue('u_invoice_currenc');
+						task.error_status=gr.getDisplayValue('u_error_status');
+						task.error_message=gr.getDisplayValue('u_error_message');
+						//data.tasks.push(task);
+						data.messages.push(task);
+						//gs.addInfoMessage(data.messages);
+					}
+			
+		}
+		
+
+
+		if (input.action == "removeMessage") {
+			data.messages.splice(input.i,1);
+		}
+
+	}	
+	//gs.addInfoMessage(data.messages);	
+})();
+
+
+
+/*data.messages = [];
+	//data.messages=input.message;
+	if (input) {
+		if (input.action == "addMessage")
+		{	
+
+			var gr=new GlideRecord('u_bit');
+			gr.addQuery('u_name',input.key_s);
+			gr.query();
+			while(gr.next())
+			{
+
+				var task={};
+				task.name=gr.getDisplayValue('u_name');
+				task.description=gr.getDisplayValue('u_description');
+				task.test=gr.getDisplayValue('u_test');
+				//data.tasks.push(task);
+				data.messages.push(task);
+			} 
+			data.messages.push(input.message);
+		}
+		if (input.action == "removeMessage") {
+			data.messages.splice(input.i,1);
+		}
+	}	*/]]></script>
+<servicenow>false</servicenow>
+<sys_class_name>sp_widget</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2018-03-07 08:07:56</sys_created_on>
+<sys_id>0848a448dbbc930084fe793ebf96191b</sys_id>
+<sys_mod_count>214</sys_mod_count>
+<sys_name>Get FC Number Detail</sys_name>
+<sys_package display_value="Global" source="global">global</sys_package>
+<sys_policy/>
+<sys_scope display_value="Global">global</sys_scope>
+<sys_update_name>sp_widget_0848a448dbbc930084fe793ebf96191b</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2018-06-16 19:19:49</sys_updated_on>
+<template><![CDATA[<input ng-change="c.abc()" ng-model="txt"/>
+
+<h1>{{count}}</h1>
+  <div class="panel panel-default">
+  <div class="panel-body m-b-n">
+    <div class="panel-footer text-center">
+
+      <div class="input-group">
+				<table>
+          <tr>
+          <td style="margin: 30px; padding: 20px;">
+            Enter FC Number
+            </td>
+            <td style="margin: 30px; padding: 20px;">
+            <input type="text" ng-model="my_key_s" class="form-control" placeholder="Searh here.." aria-label="...">
+       
+            </td>
+            <td style="margin: 30px; padding: 20px;">
+              <button type="submit" ng-click="c.add()" class="btn btn-primary">Get Details</button>
+            </td>
+          </tr>
+        </table>
+         <div class="input-group-btn">
+         </div>
+      </div>
+      <li ng-if="c.data.messages.length == 0" class="list-group-item">${Record Not Found}</li>
+	
+      <table st-table="rowCollection" class="table table-striped" border="2" class="responsive">
+        <thead>
+          <tr>
+             <th>Remove</th>	
+            <th>FC Number</th>
+            <th>FC Line Item Number</th>
+            <th>Open Amount</th>
+            <th>FC Currency</th>
+            <th>GL Account</th>
+            <th>Invoice Amount by Line Item</th>
+            <th>Invoice Currency</th>
+            <th>Error Status</th>
+            <th>Error Message</th>           	
+          </tr>
+        </thead>
+       
+          <li class="list-group-item">   
+        <tbody align="left" ng-repeat="message in c.data.messages track by $index" class="responsive" >
+          <tr>
+            <td><a href="" ng-click="c.remove($index)" class="fa fa-remove pull-left text-danger"></a>
+            </td>
+            <td>{{message.number}}</td>
+            <td>{{message.item_number}}</td>
+            <td>{{message.open_amount}}</td>
+             <td>{{message.fc_currency}}</td>
+            <td>{{message.gl_amount}}</td>
+            <td><input type="text" value={{message.invoice_amount_by_item}}></td> 
+             <td><input type="text" value={{message.invoice_currency}}></td>
+            <td>{{message.error_status}}</td>
+            <td>{{message.error_message}}</td> 
+          </tr>
+        </tbody>
+        </li>
+      </table>
+     
+    
+    
+      <!--<span>{{message}}</span>&nbsp;-->
+    </div>
+  </div>
+</div>
+ <script>
+var editable = document.querySelectorAll('td[contentEditable]');
+for (var i=0, len = editable.length; i<len; i++){
+    editable[i].setAttribute('data-orig',editable[i].innerHTML);
+    editable[i].onblur = function(){
+        if (this.innerHTML == this.getAttribute('data-orig')) {
+        }
+        else {
+            //my bit
+            var fail = parseInt(this.previousElementSibling.innerHTML);
+            var blocked = parseInt(this.innerHTML);
+            this.previousElementSibling.innerHTML = fail - blocked;
+            //end my bit    
+            this.setAttribute('data-orig',this.innerHTML);
+        }
+    };
+}
+</script>
+]]></template>
+</sp_widget>
+</unload>

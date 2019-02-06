@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2018-06-18 05:51:51">
+<sp_widget action="INSERT_OR_UPDATE">
+<category>custom</category>
+<client_script><![CDATA[function($scope,$window) {
+  var c = this;
+	c.uiAction = function(action) {
+		c.data.action = action;
+		c.server.update().then(function() {
+			
+			c.data.action = undefined;
+			
+			$window.location.href = c.data.redirect_link;
+			
+		})
+	}
+}]]></client_script>
+<controller_as>c</controller_as>
+<css/>
+<data_table>sp_instance</data_table>
+<demo_data/>
+<description/>
+<docs display_value=""/>
+<field_list/>
+<has_preview>true</has_preview>
+<id>advance_view</id>
+<internal>false</internal>
+<link/>
+<name>Advance View</name>
+<option_schema/>
+<public>false</public>
+<roles/>
+<script><![CDATA[(function() {
+ 
+	// Get table & sys_id
+  data.table = $sp.getParameter("table");
+	data.sys_id = $sp.getParameter("sys_id");
+ 
+	// Valid GlideRecord
+	gr = new GlideRecord(data.table);
+	
+	if (!gr.isValid()){
+		return;
+ 
+	}
+		
+	// Valid sys_id
+	if (!gr.get(data.sys_id)){
+		return;
+	}
+		
+	if(gr.get(data.sys_id))
+		{
+			data.redirect_link = 'nav_to.do?uri=' + gr.getLink(false);
+		}
+
+})();]]></script>
+<servicenow>false</servicenow>
+<sys_class_name>sp_widget</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2018-06-18 05:01:15</sys_created_on>
+<sys_id>e949d205db32130084fe793ebf961986</sys_id>
+<sys_mod_count>16</sys_mod_count>
+<sys_name>Advance View</sys_name>
+<sys_package display_value="Human Resources: Service Portal" source="sn_hr_sp">3d1da2705b021200a4656ede91f91ab6</sys_package>
+<sys_policy/>
+<sys_scope display_value="Human Resources: Service Portal">3d1da2705b021200a4656ede91f91ab6</sys_scope>
+<sys_update_name>sp_widget_e949d205db32130084fe793ebf961986</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2018-06-18 05:27:57</sys_updated_on>
+<template><![CDATA[<div class="panel panel-default">
+ <!--<div class="panel-heading">Action</div>-->
+ <div class="panel-body">
+ <button type="button" class="btn btn-primary btn-block" ng-click="c.uiAction()">Open in Advance View</button>
+ </div>
+</div>]]></template>
+</sp_widget>
+</unload>

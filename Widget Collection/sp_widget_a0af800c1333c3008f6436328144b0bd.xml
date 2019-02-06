@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2018-06-18 05:45:53">
+<sp_widget action="INSERT_OR_UPDATE">
+<category>custom</category>
+<client_script><![CDATA[function ($rootScope, $scope, snRecordWatcher, spUtil, $location, $uibModal, cabrillo, $timeout,$window) {  
+  var c = this;  
+  c.data.sys_id = $location.search().sys_id;
+} ]]></client_script>
+<controller_as>c</controller_as>
+<css>.btn {
+  display: inline-block;
+  text-align: center;
+}</css>
+<data_table>sp_instance</data_table>
+<demo_data/>
+<description/>
+<docs display_value=""/>
+<field_list>color</field_list>
+<has_preview>false</has_preview>
+<id>uni-record-details-link</id>
+<internal>false</internal>
+<link/>
+<name>UNI record details link button</name>
+<option_schema>[{"name":"button_text","default_value":"Open in Advanced View","section":"Presentation","label":"Button text","type":"string"},{"name":"target","default_value":"_blank","section":"Behavior","label":"Target","type":"string"}]</option_schema>
+<public>false</public>
+<roles/>
+<script><![CDATA[(function() {
+	data.buttonMsg = gs.getMessage(options.button_text || "Click Here");
+})();]]></script>
+<servicenow>false</servicenow>
+<sys_class_name>sp_widget</sys_class_name>
+<sys_created_by>gczutor</sys_created_by>
+<sys_created_on>2018-01-16 13:17:36</sys_created_on>
+<sys_id>a0af800c1333c3008f6436328144b0bd</sys_id>
+<sys_mod_count>15</sys_mod_count>
+<sys_name>UNI record details link button</sys_name>
+<sys_package display_value="Human Resources: Service Portal" source="sn_hr_sp">3d1da2705b021200a4656ede91f91ab6</sys_package>
+<sys_policy/>
+<sys_scope display_value="Human Resources: Service Portal">3d1da2705b021200a4656ede91f91ab6</sys_scope>
+<sys_update_name>sp_widget_a0af800c1333c3008f6436328144b0bd</sys_update_name>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2018-06-18 05:36:28</sys_updated_on>
+<template><![CDATA[<a ng-href="/nav_to.do?uri=sn_hr_core_case.do?sys_id={{c.data.sys_id}}" target="{{options.target}}" class="btn btn-primary m-b" role="button">{{data.buttonMsg}}</a>]]></template>
+</sp_widget>
+</unload>
